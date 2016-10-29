@@ -4,42 +4,49 @@ POST _search
       "match_all": {}
    }
 }
-    
-PUT /blog/post/1
-{ 
-    "user": "dilbert", 
-    "postDate": "2011-12-15", 
-    "body": "Search is hard. Search should be easy." ,
-    "title": "On search"
-}
 
-PUT /blog/stuff/1
+PUT /blog/recept/1
 { 
     "title": "one",
-    "tag":  [ "one", "two", "three" ]
+    "tag":  [ 
+        {
+            "name":"one",
+            "alter": "ett"
+        },
+        {
+            "name":"two"
+        },
+        {
+            "name":"three"
+        }
+    ]
 }
 
-PUT /blog/stuff/2
+PUT /blog/recept/2
 { 
     "title": "two",
-    "tag":  [ "one", "two" ]
-}
-
-POST blog/_search
-{
-  "query": {
-    "match": {
-      "tag": "one" 
-    }
-  }
+    "tag":  [ 
+        {
+            "name":"one",
+            "alter": "ett"
+        },
+        {
+            "name":"two"
+        }
+    ]
 }
 
 POST blog/_search
 {
  "query": {
-  "terms": {
-        "tag": [ "one", "three" ],
-        "minimum_should_match": 2
+    "bool" : {
+        "should" : [
+            { "term" : { "tag.name" : "ett" } },
+            { "term" : { "tag.name" : "three" } },
+            { "term" : { "tag.alter" : "ett" } },
+            { "term" : { "tag.alter" : "three" } }
+        ],
+        "minimum_should_match" : 2
    }
  }
 }
