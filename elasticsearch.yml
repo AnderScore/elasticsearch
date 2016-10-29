@@ -1,2 +1,7 @@
 cluster.name: mycluster1
 node.name: "My First Node"
+path:
+  data: /data/data
+  logs: /data/log
+  plugins: /data/plugins
+  work: /data/work
