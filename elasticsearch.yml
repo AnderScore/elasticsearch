@@ -1,0 +1,2 @@
+cluster.name: mycluster1
+node.name: "My First Node"
