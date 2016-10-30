@@ -2,6 +2,7 @@ FROM ubuntu:14.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install Java
 RUN apt-get update
 RUN apt-get install -y python-software-properties
 RUN apt-get install -y software-properties-common
@@ -12,9 +13,11 @@ RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true 
 RUN apt-get install -y oracle-java8-installer
 RUN apt-get install -y oracle-java8-set-default
 
-ENV ES_PKG_NAME elasticsearch-1.5.0
-
 # Install Elasticsearch.
+ENV ES_PKG_NAME elasticsearch-2.4.1
+
+RUN groupadd -g 1000 elasticsearch && useradd elasticsearch -u 1000 -g 1000
+
 RUN \
   cd / && \
   wget https://download.elasticsearch.org/elasticsearch/elasticsearch/$ES_PKG_NAME.tar.gz && \
@@ -22,14 +25,15 @@ RUN \
   rm -f $ES_PKG_NAME.tar.gz && \
   mv /$ES_PKG_NAME /elasticsearch
 
-# Define mountable directories.
-VOLUME ["/data"]
-
 # Mount elasticsearch.yml config
 ADD elasticsearch.yml /elasticsearch/config/elasticsearch.yml
 
-# Define working directory.
-WORKDIR /data
+RUN mkdir -p /elasticsearch/logs
+RUN mkdir -p /elasticsearch/config
+RUN mkdir -p /elasticsearch/data
+RUN chown -R elasticsearch:elasticsearch /elasticsearch
+
+USER elasticsearch
 
 # Define default command.
 CMD ["/elasticsearch/bin/elasticsearch"]

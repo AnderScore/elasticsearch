@@ -50,3 +50,18 @@ POST blog/_search
    }
  }
 }
+
+
+
+PUT /_snapshot/my_backup
+{
+    "type": "fs",
+    "settings": {
+        "location": "/data/backups/my_backup",
+        "compress": true
+    }
+}
+PUT /_snapshot/my_backup/snapshot_1?wait_for_completion=true
+
+GET /_snapshot/my_backup
+GET /_snapshot/my_backup/snapshot_1
